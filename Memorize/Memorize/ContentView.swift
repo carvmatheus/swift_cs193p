@@ -5,21 +5,16 @@
 //  Created by matheus cardoso on 10/04/24.
 //
 
-import SwiftUI //Importa a SwiftUI. Nem sempre importa as coisas
-// é de costume separar backend de frontend
+import SwiftUI
 
 struct ContentView: View {  // Struct => é qualquer coisa
-    // ContentView => é o nome desse elemento
-    // View => ContentView se comporta como um View. Que somente é um retangulo dentro da tela
+    let emojis: Array<String> = ["👻", "🥶", "🤡", "💩", "😈"]
+    
     var body: some View {   // Se é uma View, tem que ter esse elemento.
-        // Some View: basicamente é, executa isso, ve o que retorna. Deve ser algo parecido
-        // com uma View
-        
         HStack {
-            CardView(isFaceUp: true)
-            CardView()
-            CardView()
-            CardView()
+            ForEach(emojis.indices, id: \.self) { index in
+                CardView(content: emojis[index])
+            }
         }
         .foregroundColor(.orange)
         .padding()
@@ -27,24 +22,22 @@ struct ContentView: View {  // Struct => é qualquer coisa
 }
     
 struct CardView: View{
-    var isFaceUp: Bool = false // Default Value
-    
+    let content: String
+    @State var isFaceUp: Bool = true // @State está criando um apontador
     
     var body: some View{
-        ZStack {            // Vertical Stack
-            //Image(systemName: "globe") // Struct - Temos 2 views dentro
-            
-            //Text("Olá Matheus!").padding()       // Struct - 2a view dentro de Vstack
+        ZStack {
+            let base = RoundedRectangle(cornerRadius: 12)
             
             if isFaceUp {
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.white)
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(lineWidth: 2)
-                Text("👻").font(.largeTitle)
+                base.fill(.white)
+                base.strokeBorder(lineWidth: 2)
+                Text(content).font(.largeTitle)
             } else {
-                RoundedRectangle(cornerRadius: 12)
+                base.fill()
             }
+        }.onTapGesture{
+            isFaceUp.toggle()
         }
     }
 }
