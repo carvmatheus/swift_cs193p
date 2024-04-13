@@ -4,11 +4,10 @@
 //
 //  Created by matheus cardoso on 10/04/24.
 //Generic struct 'ObservedObject' requires that 'EmojiMemoryGame' conform to 'ObservableObject'
-
 import SwiftUI
 
 struct EmojiMemoryGameView: View {
-    typealias Cards = MemoryGame<String>.Card
+    typealias Card = MemoryGame<String>.Card
     @ObservedObject var viewModel: EmojiMemoryGame
     
     private let aspectRatio: CGFloat = 2/3
@@ -30,6 +29,13 @@ struct EmojiMemoryGameView: View {
             .font(.largeTitle)
         }
         .padding()
+        .overlay(
+            Group {
+                if viewModel.isGameOver {
+                    gameOverView()  // Tela de fim de jogo aparece por cima do jogo
+                }
+            }
+        )
     }
     
     private var score: some View {
@@ -111,6 +117,31 @@ struct EmojiMemoryGameView: View {
     private func scoreChange(causedBy card: Card) -> Int {
         let (amount, id) = lastScoreChange
         return card.id == id ? amount : 0
+    }
+    
+    @ViewBuilder
+    private func gameOverView() -> some View {  // Visualização para o fim de jogo
+        ZStack {
+            Color.white.opacity(0.95)
+            VStack(spacing: 20) {
+                Text("Jogo Encerrado!")
+                    .font(.headline)
+                    .padding()
+                Text("Sua pontuação: \(viewModel.score)")
+                    .font(.title)
+                Button("Reiniciar") {
+                    viewModel.resetGame()
+                }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .clipShape(Capsule())
+            }
+            .padding()
+            .border(Color.gray, width: 2)
+            .cornerRadius(10)
+        }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
