@@ -126,15 +126,17 @@ struct EmojiMemoryGameView: View {
             VStack(spacing: 20) {
                 Text("Jogo Encerrado!")
                     .font(.headline)
+                    .foregroundColor(.black)
                     .padding()
                 Text("Sua pontuação: \(viewModel.score)")
                     .font(.title)
+                    .foregroundColor(.black)
                 Button("Reiniciar") {
                     viewModel.resetGame()
                 }
                 .padding()
                 .background(Color.blue)
-                .foregroundColor(.white)
+                .foregroundColor(.black)
                 .clipShape(Capsule())
             }
             .padding()
